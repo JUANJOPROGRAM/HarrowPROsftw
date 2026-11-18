@@ -46,7 +46,7 @@
             <TextBlock Text="Harrow Pro G808" FontSize="14" FontWeight="SemiBold"/><TextBlock Text="{Binding ConnectionSubLabel}" Foreground="{StaticResource TextSecondary}" FontSize="11" Margin="0,4,0,0" TextWrapping="Wrap"/>
           </StackPanel>
         </Border>
-        <StackPanel x:Name="SidebarFooter" Grid.Row="5" Margin="7,0,0,0"><TextBlock Text="{Binding SaveLabel}" Foreground="{StaticResource TextSecondary}" FontSize="13"/><TextBlock Text="HARROW STUDIO · 0.1.1" Foreground="#696C73" FontSize="12" Margin="0,6,0,0"/></StackPanel>
+        <StackPanel x:Name="SidebarFooter" Grid.Row="5" Margin="7,0,0,0"><TextBlock Text="{Binding SaveLabel}" Foreground="{StaticResource TextSecondary}" FontSize="13"/><TextBlock Text="HARROW STUDIO · 0.1.2" Foreground="#696C73" FontSize="12" Margin="0,6,0,0"/></StackPanel>
       </Grid>
       </Grid>
     </Border>

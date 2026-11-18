@@ -41,7 +41,7 @@
     </StackPanel>
 
     <Grid Grid.Row="5">
-      <TextBlock Text="HARROW STUDIO · 0.1.1" Foreground="#777A82" FontSize="11" VerticalAlignment="Center" />
+      <TextBlock Text="HARROW STUDIO · 0.1.2" Foreground="#777A82" FontSize="11" VerticalAlignment="Center" />
       <Button x:Name="InstallButton" Content="Instalar" HorizontalAlignment="Right" MinWidth="130" Click="Install_Click" />
     </Grid>
   </Grid>

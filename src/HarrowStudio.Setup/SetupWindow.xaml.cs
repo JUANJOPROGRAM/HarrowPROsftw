@@ -136,7 +136,7 @@ public partial class SetupWindow : Window
 
         using var uninstallKey = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Uninstall\HarrowStudio");
         uninstallKey.SetValue("DisplayName", "Harrow Studio");
-        uninstallKey.SetValue("DisplayVersion", "0.1.1");
+        uninstallKey.SetValue("DisplayVersion", "0.1.2");
         uninstallKey.SetValue("Publisher", "Harrow Studio");
         uninstallKey.SetValue("InstallLocation", installPath);
         uninstallKey.SetValue("DisplayIcon", Path.Combine(installPath, "HarrowStudio.Desktop.exe"));
