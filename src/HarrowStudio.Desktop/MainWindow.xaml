@@ -1,0 +1,213 @@
+<Window x:Class="HarrowStudio.Desktop.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+        Title="Harrow Studio" Height="800" Width="1260" MinHeight="500" MinWidth="560" SizeChanged="Window_SizeChanged"
+        WindowStyle="None" ResizeMode="CanResize" WindowStartupLocation="CenterScreen" Background="{StaticResource Canvas}"
+        Foreground="{StaticResource TextPrimary}" FontFamily="Segoe UI Variable Display, Segoe UI"
+        Loaded="Window_Loaded">
+  <shell:WindowChrome.WindowChrome>
+    <shell:WindowChrome CaptionHeight="34" ResizeBorderThickness="6" CornerRadius="0" GlassFrameThickness="0" UseAeroCaptionButtons="False" />
+  </shell:WindowChrome.WindowChrome>
+  <Grid x:Name="AppRoot" Opacity="0" RenderTransformOrigin=".5,.5">
+    <Grid.RenderTransform><TranslateTransform Y="10" /></Grid.RenderTransform>
+    <Grid.RowDefinitions><RowDefinition Height="34"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+    <Grid.ColumnDefinitions><ColumnDefinition x:Name="SidebarColumn" Width="205"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+
+    <Border Grid.Row="0" Grid.ColumnSpan="2" Background="#090A0C" BorderBrush="#1D1F23" BorderThickness="0,0,0,1" shell:WindowChrome.IsHitTestVisibleInChrome="True" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+      <Grid Height="34"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+        <Grid Grid.Column="0"><StackPanel Orientation="Horizontal" Margin="8,0,0,0" VerticalAlignment="Center"><Button x:Name="SidebarToggleButton" Content="☰" Width="34" Height="30" Background="Transparent" Foreground="{StaticResource TextSecondary}" BorderThickness="0" FontSize="16" Cursor="Hand" ToolTip="Plegar navegación" Click="ToggleSidebar_Click" shell:WindowChrome.IsHitTestVisibleInChrome="True"/><Border Width="6" Height="6" CornerRadius="3" Background="{StaticResource Accent}" Margin="4,0,8,0"/><TextBlock Text="HARROW STUDIO" FontSize="11" FontWeight="Bold" Foreground="{StaticResource TextPrimary}" VerticalAlignment="Center"/><TextBlock Text="  /  G808" FontSize="11" Foreground="{StaticResource TextSecondary}" VerticalAlignment="Center" Margin="2,0,0,0"/></StackPanel><Button x:Name="UpdateAvailableButton" Content="Actualizar" Visibility="Collapsed" HorizontalAlignment="Right" VerticalAlignment="Center" Height="27" Padding="9,3" FontSize="11" Style="{StaticResource PillButton}" Click="UpdateAvailable_Click" shell:WindowChrome.IsHitTestVisibleInChrome="True"/></Grid>
+        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Stretch">
+          <Button Content="—" Width="42" Background="Transparent" Foreground="{StaticResource TextSecondary}" BorderThickness="0" FontSize="14" Cursor="Hand" Click="Minimize_Click" shell:WindowChrome.IsHitTestVisibleInChrome="True"/>
+          <Button Content="□" Width="42" Background="Transparent" Foreground="{StaticResource TextSecondary}" BorderThickness="0" FontSize="12" Cursor="Hand" Click="Maximize_Click" shell:WindowChrome.IsHitTestVisibleInChrome="True"/>
+          <Button Content="×" Width="42" Background="Transparent" Foreground="{StaticResource TextSecondary}" BorderThickness="0" FontSize="17" Cursor="Hand" Click="Close_Click" shell:WindowChrome.IsHitTestVisibleInChrome="True"/>
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <Border x:Name="SidebarSurface" Grid.Row="1" Grid.Column="0" Background="{StaticResource Sidebar}" BorderBrush="#1D1F23" BorderThickness="0,0,1,0">
+      <Grid x:Name="SidebarContent">
+      <Grid Margin="16,22,16,15">
+        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="27"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+        <StackPanel x:Name="BrandBlock" Orientation="Horizontal" VerticalAlignment="Center">
+          <Border Width="34" Height="34" CornerRadius="11" Background="{StaticResource Accent}" Margin="0,0,10,0"><TextBlock Text="H" Foreground="White" FontSize="19" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/></Border>
+          <StackPanel x:Name="BrandWordmark"><TextBlock Text="HARROW" FontSize="15" FontWeight="Bold"/><TextBlock Text="STUDIO" FontSize="11" Foreground="{StaticResource TextSecondary}" Margin="1,2,0,0"/></StackPanel>
+        </StackPanel>
+        <TextBlock x:Name="ConfigHeading" Grid.Row="2" Text="CONFIGURACIÓN" Style="{StaticResource SmallLabel}" Margin="7,0,0,10"/>
+        <StackPanel Grid.Row="3">
+          <Button x:Name="PanelNav" Style="{StaticResource NavButton}" Click="Navigate_Click" Tag="Panel" Margin="0,0,0,3"><StackPanel Orientation="Horizontal"><TextBlock Text="◫" FontSize="17" Width="27"/><TextBlock x:Name="PanelNavLabel" Text="Panel" VerticalAlignment="Center"/></StackPanel></Button>
+          <Button x:Name="AssignmentsNav" Style="{StaticResource NavButton}" Click="Navigate_Click" Tag="Asignaciones" Margin="0,0,0,3"><StackPanel Orientation="Horizontal"><TextBlock Text="⌘" FontSize="17" Width="27"/><TextBlock x:Name="AssignmentsNavLabel" Text="Asignaciones" VerticalAlignment="Center"/></StackPanel></Button>
+          <Button x:Name="MacrosNav" Style="{StaticResource NavButton}" Click="Navigate_Click" Tag="Macros" Margin="0,0,0,3"><StackPanel Orientation="Horizontal"><TextBlock Text="⌁" FontSize="19" Width="27"/><TextBlock x:Name="MacrosNavLabel" Text="Macros" VerticalAlignment="Center"/><Border x:Name="MacroBadge" Background="{StaticResource AccentDark}" CornerRadius="7" Padding="6,2" Margin="8,0,0,0"><TextBlock Text="{Binding MacroCount}" Foreground="{StaticResource Accent}" FontSize="13" FontWeight="Bold"/></Border></StackPanel></Button>
+          <Button x:Name="ProfilesNav" Style="{StaticResource NavButton}" Click="Navigate_Click" Tag="Perfiles"><StackPanel Orientation="Horizontal"><TextBlock Text="▤" FontSize="17" Width="27"/><TextBlock x:Name="ProfilesNavLabel" Text="Perfiles" VerticalAlignment="Center"/></StackPanel></Button>
+        </StackPanel>
+        <Border x:Name="DeviceCard" Grid.Row="4" Background="#111215" BorderBrush="#24262B" BorderThickness="1" CornerRadius="12" Padding="12" Margin="0,0,0,12">
+          <StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,8"><Ellipse Width="7" Height="7" Fill="{Binding Controller.IsConnected, Converter={StaticResource ConnectionBrush}}" VerticalAlignment="Center"/><TextBlock Text="DISPOSITIVO" Style="{StaticResource SmallLabel}" Margin="7,0,0,0"/></StackPanel>
+            <TextBlock Text="Harrow Pro G808" FontSize="14" FontWeight="SemiBold"/><TextBlock Text="{Binding ConnectionSubLabel}" Foreground="{StaticResource TextSecondary}" FontSize="11" Margin="0,4,0,0" TextWrapping="Wrap"/>
+          </StackPanel>
+        </Border>
+        <StackPanel x:Name="SidebarFooter" Grid.Row="5" Margin="7,0,0,0"><TextBlock Text="{Binding SaveLabel}" Foreground="{StaticResource TextSecondary}" FontSize="13"/><TextBlock Text="HARROW STUDIO · 0.1.1" Foreground="#696C73" FontSize="12" Margin="0,6,0,0"/></StackPanel>
+      </Grid>
+      </Grid>
+    </Border>
+
+    <ScrollViewer x:Name="MainScrollViewer" Grid.Row="1" Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+      <Grid x:Name="PageHost" Margin="24,22,24,22">
+        <Grid x:Name="PanelView">
+        <Grid Margin="0">
+        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+
+        <Grid x:Name="MainHeader" Grid.Row="0" Margin="0,0,0,17">
+          <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+          <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+          <StackPanel x:Name="HeaderTitle"><TextBlock Text="G808  /  DEVICE STUDIO" Style="{StaticResource SmallLabel}"/><TextBlock Text="Tu mando, a tu manera." FontSize="28" FontWeight="SemiBold" Margin="0,5,0,0"/><TextBlock x:Name="HeaderSubtitle" Text="Un espacio claro para ajustar tu experiencia de juego." Foreground="{StaticResource TextSecondary}" FontSize="15" Margin="1,4,0,0" TextWrapping="Wrap"/></StackPanel>
+          <StackPanel x:Name="HeaderActions" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+            <Border Background="#131510" BorderBrush="#262920" BorderThickness="1" CornerRadius="9" Padding="10,8" Margin="0,0,8,0"><StackPanel Orientation="Horizontal"><Ellipse Width="6" Height="6" Fill="{StaticResource Positive}" Margin="0,0,7,0" VerticalAlignment="Center"><Ellipse.Triggers><EventTrigger RoutedEvent="Loaded"><BeginStoryboard><Storyboard RepeatBehavior="Forever"><DoubleAnimation Storyboard.TargetProperty="Opacity" From="1" To=".38" Duration="0:0:1.25" AutoReverse="True"/></Storyboard></BeginStoryboard></EventTrigger></Ellipse.Triggers></Ellipse><TextBlock Text="{Binding ConnectionLabel}" Foreground="{StaticResource TextPrimary}" FontSize="12" FontWeight="SemiBold"/></StackPanel></Border>
+            <Button Style="{StaticResource OutlineButton}" Click="Save_Click" Content="Guardar perfil" FontSize="12"/>
+          </StackPanel>
+        </Grid>
+
+        <UniformGrid Grid.Row="1" Columns="3" Margin="0,0,0,13">
+          <Border Style="{StaticResource Card}" Margin="0,0,7,0" Padding="14,11"><StackPanel><TextBlock Text="ESTADO DEL MANDO" Style="{StaticResource SmallLabel}"/><StackPanel Orientation="Horizontal" Margin="0,7,0,0"><Ellipse Width="7" Height="7" Fill="{Binding Controller.IsConnected, Converter={StaticResource ConnectionBrush}}" VerticalAlignment="Center" Margin="0,0,7,0"/><TextBlock Text="{Binding ConnectionLabel}" FontSize="14" FontWeight="SemiBold"/></StackPanel></StackPanel></Border>
+          <Border Style="{StaticResource Card}" Margin="4,0" Padding="14,11"><StackPanel><TextBlock Text="PERFIL ACTIVO" Style="{StaticResource SmallLabel}"/><TextBox Style="{StaticResource DarkTextBox}" Text="{Binding ProfileName, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" Background="Transparent" Padding="0" FontSize="14" FontWeight="SemiBold" Margin="0,3,0,0"/></StackPanel></Border>
+          <Border Style="{StaticResource Card}" Margin="7,0,0,0" Padding="14,11"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><StackPanel VerticalAlignment="Center"><TextBlock Text="MACROS" Style="{StaticResource SmallLabel}"/><TextBlock Text="{Binding MacroCount, StringFormat={}{0} secuencias}" FontSize="14" FontWeight="SemiBold" Margin="0,6,0,0"/></StackPanel><Border Grid.Column="1" Width="34" Height="34" CornerRadius="10" Background="#231619"><TextBlock Text="⌁" FontSize="20" Foreground="{StaticResource Accent}" HorizontalAlignment="Center" VerticalAlignment="Center"/></Border></Grid></Border>
+        </UniformGrid>
+
+        <Grid x:Name="ContentGrid" Grid.Row="2">
+          <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+          <Grid.ColumnDefinitions><ColumnDefinition x:Name="ProductColumn" Width="1.35*"/><ColumnDefinition x:Name="DetailsColumn" Width=".95*"/></Grid.ColumnDefinitions>
+
+          <Border x:Name="ProductCard" Grid.Row="0" Grid.Column="0" Style="{StaticResource Card}" Padding="17" Margin="0,0,7,0" MinHeight="420">
+            <Grid>
+              <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+              <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><StackPanel><TextBlock Text="VISTA DEL PRODUCTO" Style="{StaticResource SmallLabel}"/><TextBlock Text="Redragon Harrow Pro" Style="{StaticResource SectionTitle}" Margin="0,4,0,0"/></StackPanel><Border Grid.Column="1" Background="#18191E" BorderBrush="#292B30" BorderThickness="1" CornerRadius="7" Padding="7,4"><TextBlock Text="G808" Foreground="{StaticResource TextSecondary}" FontSize="11" FontWeight="Bold"/></Border></Grid>
+              <Border Grid.Row="1" Margin="0,11,0,10" CornerRadius="12" Background="#08090B" ClipToBounds="True">
+                <Grid>
+                  <Image Stretch="UniformToFill" Opacity=".88" RenderOptions.BitmapScalingMode="HighQuality">
+                    <Image.Source><CroppedBitmap Source="{StaticResource HarrowProductImage}" SourceRect="820,40,850,680" /></Image.Source>
+                  </Image>
+                  <Border Background="{StaticResource HeroShade}" />
+                  <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="17,0,0,17"><TextBlock Text="HARROW PRO" Foreground="White" FontSize="11" FontWeight="Bold"/><TextBlock Text="G808" Foreground="White" FontSize="24" FontWeight="SemiBold" Margin="0,1,0,0"/><TextBlock Text="Wireless gamepad" Foreground="#D0D2D7" FontSize="11" Margin="0,2,0,0"/></StackPanel>
+                  <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="12" Background="#08090B" Opacity=".78" CornerRadius="6" Padding="7,4"><TextBlock Text="IMAGEN OFICIAL" Foreground="#E5E5E7" FontSize="11" FontWeight="SemiBold"/></Border>
+                </Grid>
+              </Border>
+              <Grid Grid.Row="2"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><StackPanel><TextBlock Text="LECTURA EN TIEMPO REAL" Style="{StaticResource SmallLabel}"/><TextBlock Text="{Binding ActiveButtonSummary}" Foreground="{StaticResource TextPrimary}" FontSize="12" Margin="0,5,0,0"/><TextBlock Text="{Binding LeftStickLabel}" Foreground="{StaticResource TextSecondary}" FontFamily="Consolas" FontSize="11" Margin="0,4,0,0"/></StackPanel><TextBlock Grid.Column="1" Text="{Binding RightStickLabel}" Foreground="{StaticResource TextSecondary}" FontFamily="Consolas" FontSize="11" VerticalAlignment="Bottom"/></Grid>
+            </Grid>
+          </Border>
+
+          <StackPanel x:Name="DetailsPanel" Grid.Row="0" Grid.Column="1" Margin="7,0,0,0">
+            <Border x:Name="AssignmentsCard" Style="{StaticResource Card}" Padding="15" Margin="0,0,0,10">
+              <StackPanel>
+                <Grid Margin="0,0,0,12"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><StackPanel><TextBlock Text="ASIGNACIONES" Style="{StaticResource SmallLabel}"/><TextBlock Text="Botones del mando" Style="{StaticResource SectionTitle}" Margin="0,4,0,0"/></StackPanel><Border Grid.Column="1" Background="#191A1F" CornerRadius="7" Padding="7,4"><TextBlock Text="{Binding Bindings.Count, StringFormat={}{0} botones}" Foreground="{StaticResource TextSecondary}" FontSize="11"/></Border></Grid>
+                <Grid Margin="3,0,3,6"><Grid.ColumnDefinitions><ColumnDefinition Width="112"/><ColumnDefinition Width="89"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><TextBlock Text="BOTÓN" Style="{StaticResource SmallLabel}"/><TextBlock Grid.Column="1" Text="ACCIÓN" Style="{StaticResource SmallLabel}"/><TextBlock Grid.Column="2" Text="ASIGNAR A" Style="{StaticResource SmallLabel}"/></Grid>
+                <ScrollViewer Height="218" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                  <ItemsControl ItemsSource="{Binding Bindings}">
+                    <ItemsControl.ItemTemplate><DataTemplate>
+                      <Border Background="#111215" BorderBrush="#1C1E22" BorderThickness="1" CornerRadius="9" Padding="6" Margin="0,0,0,5">
+                        <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="25"/><ColumnDefinition Width="87"/><ColumnDefinition Width="89"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                          <Border Width="22" Height="22" CornerRadius="7" Background="#1C1D21" VerticalAlignment="Center"><TextBlock Text="{Binding Glyph}" Foreground="#F0F0F2" FontSize="11" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/></Border>
+                          <TextBlock Grid.Column="1" Text="{Binding DisplayName}" Foreground="{StaticResource TextPrimary}" FontSize="11" VerticalAlignment="Center" Margin="4,0,0,0"/>
+                          <ComboBox Grid.Column="2" Style="{StaticResource DarkComboBox}" Height="28" FontSize="11" ItemsSource="{Binding DataContext.ActionOptions, RelativeSource={RelativeSource AncestorType=ItemsControl}}" SelectedItem="{Binding Action, UpdateSourceTrigger=PropertyChanged}" Margin="3,0"/>
+                          <ComboBox Grid.Column="3" Style="{StaticResource DarkComboBox}" Height="28" FontSize="11" ItemsSource="{Binding DataContext.AssignmentOptions, RelativeSource={RelativeSource AncestorType=ItemsControl}}" SelectedItem="{Binding TargetButton, UpdateSourceTrigger=PropertyChanged}" Margin="3,0,0,0"/>
+                        </Grid>
+                      </Border>
+                    </DataTemplate></ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                </ScrollViewer>
+                <TextBlock Text="Tus cambios se guardan en el perfil local." Foreground="{StaticResource TextSecondary}" FontSize="11" Margin="0,8,0,0" TextWrapping="Wrap"/>
+              </StackPanel>
+            </Border>
+
+            <Border x:Name="MacrosCard" Style="{StaticResource Card}" Padding="15">
+              <StackPanel>
+                <Grid Margin="0,0,0,10"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><StackPanel><TextBlock Text="MACROS" Style="{StaticResource SmallLabel}"/><TextBlock Text="Secuencias guardadas" Style="{StaticResource SectionTitle}" Margin="0,4,0,0"/></StackPanel><Button Grid.Column="1" Style="{StaticResource PillButton}" Content="＋ Nueva" Click="NewMacro_Click" Padding="10,7" FontSize="11"/></Grid>
+                <ItemsControl ItemsSource="{Binding Macros}"><ItemsControl.ItemTemplate><DataTemplate><Border Background="#111215" BorderBrush="#1D1F24" BorderThickness="1" CornerRadius="9" Padding="9,8" Margin="0,0,0,5"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><StackPanel><TextBlock Text="{Binding Name}" Foreground="{StaticResource TextPrimary}" FontSize="12" FontWeight="SemiBold"/><TextBlock Text="{Binding Steps.Count, StringFormat={}{0} pasos}" Foreground="{StaticResource TextSecondary}" FontSize="11" Margin="0,3,0,0"/></StackPanel><TextBlock Grid.Column="1" Text="◌" Foreground="{StaticResource Accent}" FontSize="17" Margin="5,0,9,0" VerticalAlignment="Center"/><Button Grid.Column="2" Content="×" Tag="{Binding}" Click="DeleteMacro_Click" Background="Transparent" BorderThickness="0" Foreground="{StaticResource TextSecondary}" FontSize="17" Cursor="Hand" VerticalAlignment="Center"/></Grid></Border></DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+                <TextBlock Text="Perfiles y macros almacenados en este equipo." Foreground="{StaticResource TextSecondary}" FontSize="11" Margin="0,4,0,0" TextWrapping="Wrap"/>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+        </Grid>
+
+        <Border Grid.Row="3" Background="#101114" BorderBrush="#202227" BorderThickness="1" CornerRadius="11" Padding="11" Margin="0,11,0,0"><StackPanel Orientation="Horizontal"><TextBlock Text="i" Foreground="{StaticResource Accent}" FontWeight="Bold" FontSize="14" Margin="0,0,8,0"/><TextBlock Text="La lectura y edición de perfiles ya están listas. La aplicación de reasignaciones al juego requiere integrar un mando virtual de Windows." Foreground="{StaticResource TextSecondary}" FontSize="11" VerticalAlignment="Center" TextWrapping="Wrap"/></StackPanel></Border>
+        </Grid>
+        </Grid>
+
+        <Grid x:Name="AssignmentsView" Visibility="Collapsed">
+          <StackPanel>
+            <Grid Margin="0,0,0,18">
+              <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+              <StackPanel><TextBlock Text="MANDO / ASIGNACIONES" Style="{StaticResource SmallLabel}"/><TextBlock Text="Personaliza tus controles" FontSize="28" FontWeight="SemiBold" Margin="0,5,0,0"/><TextBlock Text="Selecciona un botón del Harrow para cambiar su comportamiento." Foreground="{StaticResource TextSecondary}" FontSize="14" Margin="0,5,0,0" TextWrapping="Wrap"/></StackPanel>
+              <Border Grid.Column="1" Background="#131510" BorderBrush="#262920" BorderThickness="1" CornerRadius="9" Padding="12,9" VerticalAlignment="Center"><StackPanel Orientation="Horizontal"><Ellipse Width="7" Height="7" Fill="{Binding Controller.IsConnected, Converter={StaticResource ConnectionBrush}}" VerticalAlignment="Center" Margin="0,0,8,0"/><StackPanel><TextBlock Text="{Binding ConnectionLabel}" FontSize="12" FontWeight="SemiBold"/><TextBlock Text="{Binding ConnectionSubLabel}" Foreground="{StaticResource TextSecondary}" FontSize="10" Margin="0,2,0,0"/></StackPanel></StackPanel></Border>
+            </Grid>
+
+            <Grid x:Name="AssignmentLayout">
+              <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+              <Grid.ColumnDefinitions><ColumnDefinition x:Name="AssignmentImageColumn" Width="1.25*"/><ColumnDefinition x:Name="AssignmentEditorColumn" Width=".9*"/></Grid.ColumnDefinitions>
+
+              <Border x:Name="ControllerAssignmentCard" Grid.Row="0" Grid.Column="0" Style="{StaticResource Card}" Margin="0,0,8,0" Padding="18">
+                <StackPanel>
+                  <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><StackPanel><TextBlock Text="VISTA DEL MANDO" Style="{StaticResource SmallLabel}"/><TextBlock Text="Redragon Harrow Pro G808" Style="{StaticResource SectionTitle}" Margin="0,4,0,0"/></StackPanel><TextBlock Grid.Column="1" Text="CLIC EN UN CONTROL PARA EDITAR" Foreground="{StaticResource TextSecondary}" FontSize="11" VerticalAlignment="Center"/></Grid>
+                  <Border Background="#08090B" CornerRadius="13" Margin="0,14,0,10" Padding="8">
+                    <Viewbox Stretch="Uniform" Height="480" MaxHeight="500" HorizontalAlignment="Stretch">
+                      <Canvas x:Name="ControllerCanvas" Width="820" Height="590"><Image Source="{StaticResource HarrowControllerImage}" Width="720" Height="568" Canvas.Left="50" Canvas.Top="12" Stretch="Uniform"/></Canvas>
+                    </Viewbox>
+                  </Border>
+                  <StackPanel Orientation="Horizontal"><Ellipse Width="7" Height="7" Fill="{StaticResource Accent}" VerticalAlignment="Center" Margin="0,0,8,0"/><TextBlock Text="Seleccionado" Foreground="{StaticResource TextSecondary}" FontSize="12"/><Ellipse Width="7" Height="7" Fill="{StaticResource Positive}" VerticalAlignment="Center" Margin="15,0,8,0"/><TextBlock Text="Pulsado" Foreground="{StaticResource TextSecondary}" FontSize="12"/></StackPanel>
+                </StackPanel>
+              </Border>
+
+              <StackPanel x:Name="AssignmentEditorPanel" Grid.Row="0" Grid.Column="1" Margin="8,0,0,0">
+                <Border Style="{StaticResource Card}" Padding="18" Margin="0,0,0,12">
+                  <StackPanel>
+                    <TextBlock Text="CONTROL SELECCIONADO" Style="{StaticResource SmallLabel}"/>
+                    <TextBlock Text="{Binding SelectedButtonName}" FontSize="25" FontWeight="SemiBold" Margin="0,6,0,0"/>
+                    <TextBlock Text="Elige la función que ejecutará este control." Foreground="{StaticResource TextSecondary}" FontSize="12" Margin="0,4,0,0" TextWrapping="Wrap"/>
+                    <Border Height="1" Background="#282A30" Margin="0,15,0,14"/>
+                    <TextBlock Text="ACCIÓN" Style="{StaticResource SmallLabel}" Margin="0,0,0,7"/>
+                    <ComboBox x:Name="SelectedActionBox" Style="{StaticResource DarkComboBox}" Height="40" FontSize="13" ItemsSource="{Binding ActionOptions}" SelectedItem="{Binding SelectedBinding.Action, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Text="ASIGNAR A" Style="{StaticResource SmallLabel}" Margin="0,16,0,7"/>
+                    <ComboBox x:Name="SelectedTargetBox" Style="{StaticResource DarkComboBox}" Height="40" FontSize="13" ItemsSource="{Binding AssignmentOptions}" SelectedItem="{Binding SelectedBinding.TargetButton, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button x:Name="CaptureButton" Style="{StaticResource OutlineButton}" Content="Detectar con el mando" Click="CaptureControllerButton_Click" Height="40" Margin="0,14,0,0" FontSize="13" HorizontalAlignment="Stretch"/>
+                    <TextBlock x:Name="CaptureStatusLabel" Text="Pulsa el control en la imagen o selecciónalo desde el mando." Foreground="{StaticResource TextSecondary}" FontSize="12" Margin="0,9,0,0" TextWrapping="Wrap"/>
+                    <TextBlock Text="{Binding SaveLabel}" Foreground="{StaticResource TextSecondary}" FontSize="11" Margin="0,6,0,0"/>
+                    <Button Style="{StaticResource PillButton}" Content="Guardar asignación" Click="SaveAssignment_Click" Height="40" Margin="0,13,0,0" FontSize="13" HorizontalAlignment="Stretch"/>
+                  </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource Card}" Padding="16">
+                  <StackPanel><Grid Margin="0,0,0,8"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock Text="TODOS LOS CONTROLES" Style="{StaticResource SmallLabel}"/><TextBlock Grid.Column="1" Text="{Binding Bindings.Count, StringFormat={}{0}}" Foreground="{StaticResource TextSecondary}" FontSize="11"/></Grid>
+                    <ListBox x:Name="AssignmentBindingsList" Style="{StaticResource MappingListBox}" MaxHeight="400" ItemsSource="{Binding Bindings}" SelectedItem="{Binding SelectedBinding, Mode=TwoWay}" SelectionChanged="AssignmentBindingsList_SelectionChanged">
+                      <ListBox.ItemTemplate><DataTemplate><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="34"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><Border Width="27" Height="27" Background="#24262B" CornerRadius="8" VerticalAlignment="Center"><TextBlock Text="{Binding Glyph}" Foreground="{StaticResource TextPrimary}" FontSize="12" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/></Border><StackPanel Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center"><TextBlock Text="{Binding SourceButton}" FontSize="13" FontWeight="SemiBold"/><TextBlock Text="{Binding TargetButton}" Foreground="{StaticResource TextSecondary}" FontSize="11" Margin="0,2,0,0"/></StackPanel><TextBlock Grid.Column="2" Text="›" Foreground="{StaticResource TextSecondary}" FontSize="18" VerticalAlignment="Center"/></Grid></DataTemplate></ListBox.ItemTemplate>
+                    </ListBox>
+                  </StackPanel>
+                </Border>
+              </StackPanel>
+            </Grid>
+          </StackPanel>
+        </Grid>
+
+        <Grid x:Name="MacrosView" Visibility="Collapsed">
+          <StackPanel>
+            <Grid Margin="0,0,0,18"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><StackPanel><TextBlock Text="MANDO / MACROS" Style="{StaticResource SmallLabel}"/><TextBlock Text="Tus secuencias" FontSize="28" FontWeight="SemiBold" Margin="0,5,0,0"/><TextBlock Text="Crea y organiza combinaciones para este perfil." Foreground="{StaticResource TextSecondary}" FontSize="14" Margin="0,5,0,0"/></StackPanel><Button Grid.Column="1" Style="{StaticResource PillButton}" Content="＋ Nueva macro" Click="NewMacro_Click" Padding="16,11" FontSize="13" VerticalAlignment="Center"/></Grid>
+            <Border Style="{StaticResource Card}" Padding="18"><StackPanel><Grid Margin="0,0,0,12"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock Text="MACROS DEL PERFIL" Style="{StaticResource SmallLabel}"/><TextBlock Grid.Column="1" Text="{Binding MacroCount, StringFormat={}{0} secuencias}" Foreground="{StaticResource TextSecondary}" FontSize="12"/></Grid><ItemsControl ItemsSource="{Binding Macros}"><ItemsControl.ItemTemplate><DataTemplate><Border Background="#141519" BorderBrush="#24262B" BorderThickness="1" CornerRadius="11" Padding="14" Margin="0,0,0,8"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="36"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><Border Width="30" Height="30" CornerRadius="9" Background="#30171B"><TextBlock Text="⌁" Foreground="{StaticResource Accent}" FontSize="19" HorizontalAlignment="Center" VerticalAlignment="Center"/></Border><StackPanel Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center"><TextBlock Text="{Binding Name}" FontSize="14" FontWeight="SemiBold"/><TextBlock Text="{Binding Steps.Count, StringFormat={}{0} pasos}" Foreground="{StaticResource TextSecondary}" FontSize="12" Margin="0,4,0,0"/></StackPanel><Button Grid.Column="2" Content="Eliminar" Tag="{Binding}" Click="DeleteMacro_Click" Background="#1B1C21" Foreground="{StaticResource TextPrimary}" BorderThickness="0" Padding="12,8" FontSize="11" Cursor="Hand" VerticalAlignment="Center"/></Grid></Border></DataTemplate></ItemsControl.ItemTemplate></ItemsControl></StackPanel></Border>
+          </StackPanel>
+        </Grid>
+
+        <Grid x:Name="ProfilesView" Visibility="Collapsed">
+          <StackPanel>
+            <StackPanel Margin="0,0,0,18"><TextBlock Text="MANDO / PERFILES" Style="{StaticResource SmallLabel}"/><TextBlock Text="Perfil activo" FontSize="28" FontWeight="SemiBold" Margin="0,5,0,0"/><TextBlock Text="Ajusta el nombre y guarda la configuración actual del mando." Foreground="{StaticResource TextSecondary}" FontSize="14" Margin="0,5,0,0" TextWrapping="Wrap"/></StackPanel>
+            <Border Style="{StaticResource Card}" Padding="20" MaxWidth="720">
+              <StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,18"><Border Width="42" Height="42" CornerRadius="13" Background="#231619" Margin="0,0,12,0"><TextBlock Text="▤" FontSize="22" Foreground="{StaticResource Accent}" HorizontalAlignment="Center" VerticalAlignment="Center"/></Border><StackPanel VerticalAlignment="Center"><TextBlock Text="CONFIGURACIÓN LOCAL" Style="{StaticResource SmallLabel}"/><TextBlock Text="Harrow Pro G808" FontSize="15" FontWeight="SemiBold" Margin="0,4,0,0"/></StackPanel></StackPanel>
+                <TextBlock Text="NOMBRE DEL PERFIL" Style="{StaticResource SmallLabel}" Margin="0,0,0,8"/><TextBox Style="{StaticResource DarkTextBox}" Text="{Binding ProfileName, UpdateSourceTrigger=PropertyChanged}" FontSize="14"/>
+                <Grid Margin="0,18,0,0"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><Border Background="#15161A" CornerRadius="10" Padding="13" Margin="0,0,6,0"><StackPanel><TextBlock Text="ASIGNACIONES" Style="{StaticResource SmallLabel}"/><TextBlock Text="{Binding Bindings.Count, StringFormat={}{0} botones}" FontSize="14" FontWeight="SemiBold" Margin="0,5,0,0"/></StackPanel></Border><Border Grid.Column="1" Background="#15161A" CornerRadius="10" Padding="13" Margin="6,0,0,0"><StackPanel><TextBlock Text="MACROS" Style="{StaticResource SmallLabel}"/><TextBlock Text="{Binding MacroCount, StringFormat={}{0} secuencias}" FontSize="14" FontWeight="SemiBold" Margin="0,5,0,0"/></StackPanel></Border></Grid>
+                <TextBlock Text="El perfil se guarda en este equipo y se carga automáticamente al iniciar Harrow Studio." Foreground="{StaticResource TextSecondary}" FontSize="12" Margin="0,17,0,0" TextWrapping="Wrap"/>
+                <Button Style="{StaticResource OutlineButton}" Content="Guardar perfil" Click="Save_Click" HorizontalAlignment="Right" Margin="0,18,0,0"/>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+        </Grid>
+      </Grid>
+    </ScrollViewer>
+  </Grid>
+</Window>

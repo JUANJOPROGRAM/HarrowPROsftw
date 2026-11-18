@@ -1,0 +1,31 @@
+name: Publish Windows release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: windows-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Set up .NET 10
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Build self-contained installer
+        shell: pwsh
+        run: ./scripts/build-installer.ps1
+
+      - name: Publish GitHub release with installer
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$env:GITHUB_REF_NAME" artifacts/HarrowStudioSetup.exe --title "$env:GITHUB_REF_NAME" --generate-notes

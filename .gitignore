@@ -1,0 +1,11 @@
+.devhome/
+.packages/
+.nuget-http-cache/
+bin/
+obj/
+artifacts/
+*.user
+*.suo
+restore-*.log
+build.log
+diag-build.txt

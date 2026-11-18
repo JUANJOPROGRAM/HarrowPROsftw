@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\HarrowStudio.Domain\HarrowStudio.Domain.csproj" />
+    <ProjectReference Include="..\HarrowStudio.Application\HarrowStudio.Application.csproj" />
+    <ProjectReference Include="..\HarrowStudio.Infrastructure\HarrowStudio.Infrastructure.csproj" />
+    <Resource Include="..\..\assets\harrow-pro-reference.jpg" Link="Assets\harrow-pro-reference.jpg" />
+    <Resource Include="..\..\assets\harrow-pro-660x520-1.png" Link="Assets\harrow-pro-660x520-1.png" />
+    <Resource Include="..\..\assets\harrow-studio.png" Link="Assets\harrow-studio.png" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <Version>0.1.1</Version>
+    <ApplicationIcon>..\..\assets\harrow-studio.ico</ApplicationIcon>
+  </PropertyGroup>
+
+</Project>
